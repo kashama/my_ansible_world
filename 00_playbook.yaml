@@ -1,0 +1,180 @@
+---
+- name: Install tools on multiple servers
+  hosts: all
+  become: yes
+  vars:
+    ubuntu_tools:
+      - git
+      - curl
+      - vim
+    centos_tools:
+      - git
+      - curl-minimal
+    common_tools:
+      - wget
+    centos_htop: 
+      - htop
+        #hosts: ubuntu-c
+  tasks:
+    #Using registers and when
+    - name: Exploring register
+      command: hostname -s
+      register: hostname_output
+    - name: Then register when conditions are met
+      command: hostname -s
+      when: ( ansible_distribution == "CentOS" and ansible_distribution_major_version | int >= 8) or  ( ansible_distribution == "Ubuntu" and ansible_distribution_major_version | int >= 20)
+
+    #Using looping 
+    - name: Configure a MOTD(Message Of The Day)
+      copy:
+        content: "Welcome to {{ item }} Linux - Ansible Rockes!\n"
+        dest: /etc/motd
+      notify: MOTD changed
+      with_items: ['CentOS', 'Ubuntu']
+      when: ansible_distribution == item
+    #Using with_items loop to create a set of users
+    - name: Creating a set of users using with_items loop.
+      user:
+        name: "{{ item }}"
+        state: absent #this option is used to remove users we have created here
+      with_items:
+        - Larry
+        - Patient
+        - Joan
+        - Peniel
+        - Nolly
+        - Bij
+        - Gedeon
+        - Tresor
+    #Using with_dict loop create a set of users with more details
+    - name: Creating users
+      user:
+        name: "{{ item.key }}"
+        comment: "{{ item.value.full_name }}"
+      with_dict:
+        Larry:
+          full_name: Larry Kabanga
+        Noella:
+          full_name: Noella Tshilomba Ndaye
+        Bij:
+          full_name: Bij Kashama
+        Patient:
+          full_name: Patient Kapongo
+
+        Daniel:
+          full_name: Daniel Mungabo
+    #Using with_subelements loop
+    - name: Creating differents entreprise departments
+      user:
+        name: "{{ item.1 }}"
+        comment: "{{ item.1 | title }} {{ item.0.department }}"
+        # https://docs.ansible.com/ansibe/latest/plugins/lookup/password.html
+        password: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters,digits,hexdigits,punctuation') | password_hash('sha512') }}" 
+      with_subelements:
+        -
+          - department: IT Department
+            members:
+              - Djo
+              - Bij
+              - Kevin
+              - Daniel
+          - department: Finance Department
+            members:
+              - Joel
+              - Gedeon
+              - Mary
+              - Garluc
+          - department: Accounting Department
+            members:
+              - Nolly
+              - Toto
+              - Julie
+              - Kash
+        - members
+    #Creating directories using with_nested loop.
+    - name: Creating directories using with_nested loop. 
+      file:
+        dest: "/home/{{ item.0 }}/{{ item.1 }}"
+        owner: "{{ item.0 }}"
+        group: "{{ item.0 }}"
+        state: directory
+      with_nested:
+        - [ Djo, Bij, Kevin, Daniel, Joel, Gedeon, Mary, Garluc]
+        - [ photos, movies, documents, videos ]
+          
+    # to add a public key to our current users using with_file loop
+    #- name: Creating authorized key(Public Key for the current users)
+    #authorized_key:
+    #   user: Larry
+    #   key: "{{ item }}"
+    # with_file:
+    #   - /home/ansible/.ssh/id_rsa.pub
+    #   - custum_key.pub
+    #- name: Running a script until we hit certain condition(10 for example.) 
+    # script: random.sh # here is the script we are running
+    #  register: result
+    # retries: 20
+    # until: result.stdout.find("10") != -1
+      # n.b. the default delay is 5 seconds
+      #  delay: 1
+    - name: Show hostname_output
+      debug:
+        var: hostname_output
+    - name: Add centos4 to centos_systems
+      add_host:
+        name: centos4
+        groups: centos_systems, ubuntu_systems
+    - name: Ping all in centos_systems
+      ping:
+    # Task for Ubuntu systems
+    - name: Install tools on Ubuntu
+      ansible.builtin.apt:
+        name: "{{ ubuntu_tools }}"
+        state: present
+        update_cache: yes
+      when: "'ubuntu_systems' in group_names"
+      tags: ubuntu
+
+    # Task for CentOS systems
+    - name: Install tools on CentOS
+      ansible.builtin.yum:
+        name: "{{ centos_tools }}"
+        state: present
+      when: "'centos_systems' in group_names"
+      tags: centos
+    
+    # Enable EPEL repo on CentOS systems
+    - name: Enable EPEL repo on CentOS
+      ansible.builtin.yum:
+        name: epel-release
+        state: present
+      when: ansible_distribution == "CentOS"
+
+    # Install htop on CentOS
+    - name: Install htop on CentOS
+      ansible.builtin.yum:
+        name: "{{ centos_htop }}"
+        state: present
+      when: ansible_distribution == "CentOS"
+
+    # Task to install common tools on all systems
+    - name: Install common tools
+      ansible.builtin.package:
+        name: "{{ common_tools }}"
+        state: present
+      tags: common
+
+    # Verify installation of tools
+    - name: Check Git version
+      command: git --version
+      register: git_version
+      changed_when: false
+    - name: Show Git version installed
+      debug:
+        msg: "Git version: {{ git_version.stdout }}"
+  #handlers
+  handlers:
+    - name: MOTD changed
+      debug:
+        msg: The MOTD was changed
+...
