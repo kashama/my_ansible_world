@@ -1,0 +1,10 @@
+---
+- name: The first installation ansible playbook
+  hosts: all #To select all the servers defined in our inventory
+  become: true #to become sudo
+
+  tasks:
+  - name: Installing nginx in the servers...
+    package: #Here, we can use apt(Ubuntu/Debian) but we use package module for all modules(apt,yum,dnf)
+      name: nginx
+      state: present
