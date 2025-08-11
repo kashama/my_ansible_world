@@ -1,7 +1,8 @@
-# my_ansible_world
+# Name of my repo = my_ansible_world
 This is my repo where I practice my ansible skills
 
 This R:EADME file will be edited progressively
+# Using ansible COMMANDS to manage servers
 
 1. First ansible command to establish connectivity to different host servers
 
@@ -65,3 +66,6 @@ In ubuntu/debian systems we can also run:
 	 ansible all -m apt -a "upgrade=dist" --become --ask-become-pass  
 
 To upgrade all the necessary indexes(tools) to the latest version
+
+# Using ansible PLAYBOOKS to efficiently manage servers
+ 
