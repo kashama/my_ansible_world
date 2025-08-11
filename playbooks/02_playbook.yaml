@@ -1,0 +1,34 @@
+---
+
+- name: Handling installation into different distributions
+  hosts: all
+  become: yes
+  tasks:
+    - name: Updating systems cache
+      apt:
+        update_cache: yes
+      when: ansible_distribution in ["Ubuntu","Debian"]
+
+    - name: Installing apache2 into Ubuntu OS
+      apt:
+        name:  apache2
+        state: present
+      when: ansible_distribution in ["Ubuntu","Debian"]
+
+    - name: Installing nginx in all systems
+      apt:
+        name: nginx
+        state: present
+      when: ansible_distribution == "Ubuntu"
+
+
+    - name: installing httpd(apache2) into CentOS
+      dnf:
+        name: httpd
+        state: present
+      when: ansible_distribution == "CentOS"
+    - name: installing php into CentOS
+      dnf:
+        name: php
+        state: latest
+      when: ansible_distribution == "CentOS"

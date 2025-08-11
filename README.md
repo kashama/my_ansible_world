@@ -93,4 +93,21 @@ The ansible playbook is writing in yaml format, the above code allow us to insta
 
 Then we can run the command below to execute our playbook(01_playbook.yaml) with the associated servers inventory(01_inventory)
 
-	  ansible-playbook -i inventories/01_inventory playbooks/01_playbook.yaml --become --ask-become-pass 
+	  ansible-playbook -i inventories/01_inventory playbooks/01_playbook.yaml --become --ask-become-pass
+
+
+Note: with a state set to absent, it allows to uninstall the existing tool
+
+
+There is another way to make changes into the systems based on its criteria like(distributon for example: Ubuntu/Debian or Centos/Fedora and so on.
+
+
+In this case we use the module(when)
+
+
+      when: ansible_distribution in ["Ubuntu","Debian"]
+
+      when: ansible_distribution == "Ubuntu"
+
+      when: ansible_distribution == "CentOS"
+~                                                 

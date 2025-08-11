@@ -1,0 +1,11 @@
+---
+
+- name: Removing installed tools ploybook...
+  hosts: all
+  become: yes
+  tasks:
+    - name: Removing nginx from the servers
+      package:
+        name: nginx
+        state: absent  # this line allow to remove the existing tool
+
