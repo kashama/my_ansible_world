@@ -21,11 +21,12 @@ After adding the defauft ansible.cfg(configuration file) we can run the short ve
 
 4. The previous command will collect the informations about all servers, but if we want to get the information about a specific server(host), we can run the same comand by specifying the limit to the server(Ex: 172.18.0.8)
 
-	ansible all -m gather_facts --limit 172.18.0.8
+       ansible all -m gather_facts --limit 172.18.0.8
 
 5. When trying to run a command that is suppose to make changes to the servers(like when we run: apt update command without sudo, this command will fail unless we use sudo for the command to execute like: sudo apt update or sudo apt install something), in the ansible, it is also the same while tryng to run a command with module that is suppose to make changes to the server(like: ansible all -m apt, here the module apt is used to modifying the server like:  ansible all -m apt -a update_cache=true) but this command will fail because we dont have the priviledge. To make this command run, we have to add options(or parameters that will allow the command to run as sudo in ansible)
 
-	ansible all -m apt -a update_cache=true --become --ask-become-pass
+	
+	 ansible all -m apt -a update_cache=true --become --ask-become-pass
 
 The equivalent as:
 
