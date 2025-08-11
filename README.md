@@ -70,15 +70,20 @@ To upgrade all the necessary indexes(tools) to the latest version
 # Using ansible PLAYBOOKS to efficiently manage servers
 Here, we use our test editor(vim) to create a playbook file(01_playbook.yaml)
 
----
-- name: The first installation ansible playbook
-  hosts: all #To select all the servers defined in our inventory
-  become: true #to become sudo
 
-  tasks:
-  - name: Installing nginx in the servers...
-    package: #Here, we can use apt(Ubuntu/Debian) but we use package module for all modules(apt,yum,dnf)                                                      name: nginx
+ ---
+ - name: The first installation ansible playbook
+   hosts: all #To select all the servers defined in our inventory
+   become: true #to become sudo
 
+   tasks:
+   - name: Installing nginx in the servers...
+     package: #Here, we can use apt(Ubuntu/Debian) but we use package module for all modules(apt,yum,dnf)                                                      name: nginx
+
+In our playbook we use:
+	hosts: all #To select all the servers defined in our inventory
+	become: true #to become sudo
+	package: #Here, we can use apt(Ubuntu/Debian) but we use package module for all modules(apt,yum,dnf)
 The ansible playbook is writing in yaml format, the above code allow us to install apache2 into our targeted servers.
 
 Then we can run the command below to execute our playbook(01_playbook.yaml) with the associated servers inventory(01_inventory)
