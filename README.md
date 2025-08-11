@@ -51,4 +51,11 @@ or for all(Ubuntu/Debian=apt module; CentOS/RedHat=yum and dnf module) we use: p
 
 	 ansible all -m package -a name=tmux --become --ask-become-pass
 
-When we run these commands above to make changes to the systems, it will prompt to BECOME Password to ask you to provide the password like you do with sudo(sudo apt update && sudo apt install something) 
+When we run these commands above to make changes to the systems, it will prompt to BECOME Password to ask you to provide the password like you do with sudo(sudo apt update && sudo apt install something)
+
+After updating the system indexes with(sudo apt update) we can see the see the system indexes that are up to date and the ones need to be upgraded(sudo apt upgrade) to upgrade. With ansible, we run the command below to upgrade specific index(tool) by providing the argument (state=lates).
+
+
+	  ansible all -m package -a "name=wget state=latest" --become --ask-become-pass
+
+You can see that when there multiple arguments(-a) we use "..."  
