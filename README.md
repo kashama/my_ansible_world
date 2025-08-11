@@ -40,4 +40,11 @@ In case we running different OS like, Ubuntu/Debian  the module is: apt, and for
 So can run with package module that will select the correct modules(apt,yum,dnf) depending on the linus OS in the server:
 
 	ansible all -m package -a "update_cache=true" --become --ask-become-pass
- 
+
+6. To install a tool (vim) in the ansible servers(Ubuntu/Debian)
+
+        ansible all -m apt -a name=vim --become --ask-become-pass 
+
+or for all(Ubuntu/Debian=apt module; CentOS/RedHat=yum and dnf module) we use: package module:
+
+	 ansible all -m package -a name=vim --become --ask-become-pass
