@@ -114,5 +114,6 @@ when: ansible_distribution == "CentOS"
 
 	  ansible all -m gather_facts --limit 172.18.0.8 | grep ansible_distribution
 
-
+	  ansible all -m gather_facts | grep ansible
+_distribution
                                
