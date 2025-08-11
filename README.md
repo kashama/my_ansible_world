@@ -49,5 +49,4 @@ or for all(Ubuntu/Debian=apt module; CentOS/RedHat=yum and dnf module) we use: p
 
 	 ansible all -m package -a name=vim --become --ask-become-pass
 
-
 	 ansible all -m package -a name=tmux --become --ask-become-pass
