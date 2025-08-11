@@ -105,9 +105,14 @@ There is another way to make changes into the systems based on its criteria like
 In this case we use the module(when)
 
 
-      when: ansible_distribution in ["Ubuntu","Debian"]
+when: ansible_distribution in ["Ubuntu","Debian"]
 
-      when: ansible_distribution == "Ubuntu"
+when: ansible_distribution == "Ubuntu"
 
-      when: ansible_distribution == "CentOS"
-~                                                 
+when: ansible_distribution == "CentOS"
+
+
+	  ansible all -m gather_facts --limit 172.18.0.8 | grep ansible_distribution
+
+
+                               
