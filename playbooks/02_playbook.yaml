@@ -1,34 +1,53 @@
 ---
 
-- name: Handling installation into different distributions
+- name: Updating all servers before any installation
   hosts: all
   become: yes
   tasks:
-    - name: Updating systems cache
-      apt:
+    - name: Updating ubuntu servers
+      ansible.builtin.apt:
         update_cache: yes
-      when: ansible_distribution in ["Ubuntu","Debian"]
-
-    - name: Installing apache2 into Ubuntu OS
-      apt:
-        name:  apache2
-        state: present
-      when: ansible_distribution in ["Ubuntu","Debian"]
-
-    - name: Installing nginx in all systems
-      apt:
-        name: nginx
-        state: present
+        only_upgrade: yes
+      tags: always
       when: ansible_distribution == "Ubuntu"
 
+    - name: Updating centos servers
+      package:
+        update_only: yes
+        update_cache: yes
+      tags: always
+      when: ansible_distribution == "Centos"
 
-    - name: installing httpd(apache2) into CentOS
-      dnf:
-        name: httpd
+- name: Ubuntu servers installation
+  hosts: ubuntu_servers
+  become: yes
+  tasks:
+    - name: Installing tools into ubuntu servers
+      apt:
+        name:
+          - apache2
+          - nginx
         state: present
-      when: ansible_distribution == "CentOS"
-    - name: installing php into CentOS
+      when: ansible_distribution == "Ubuntu"
+      tags: [ubuntu,apache,apache,nginx]
+    - name: Copying file to the servers(Ubuntu)
+      copy:
+        src: /root/my_ansible_world/assets/default_site.html
+        dest: /var/www/html/index.html
+        owner: root
+        group: root
+        mode: 0644
+      tags: [ubuntu,apache,apache,nginx]
+- name: Centos servers installation
+  hosts: centos_servers
+  become: yes
+  tasks:
+    - name: Installing tools into centos servers
       dnf:
-        name: php
-        state: latest
-      when: ansible_distribution == "CentOS"
+        name:
+          - httpd
+          - samba
+          - mysql
+        state: present
+      when: ansible_distribution == "Centos"
+      tags: [centos,httpd,samba,mysql]
