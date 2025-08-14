@@ -1,3 +1,6 @@
+[workstation]
+172.27.181.243 ansible_port=2222
+
 [ubuntu_servers]
 172.18.0.4
 172.18.0.8
