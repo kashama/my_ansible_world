@@ -18,7 +18,7 @@
       service:
         name: apache2
         state: started
-        enabled: yes 
+        enable: yes 
 
 - name: Updating all servers before any installation
   hosts: all
@@ -76,16 +76,3 @@
         name: httpd
         state: started
       when: ansible_distribution == "CentOS"
-    
-    - name: Changing a line in the service(httpd) configuration file
-      lineinfile:
-        path: /etc/httpd/conf/httpd.conf
-        regexp: '^ServerAdmin'
-        line: ServerAdmin bijkashama2@gmail.com
-      when: ansible_distribution == "CentOS"
-      register: httpd #il enregistre le changement
-    - name: Restarting httpd(apache) service in CentOS
-      service:
-        name: httpd
-        state: restarted
-      when: httpd.changed #il utilise le changement enregistré
