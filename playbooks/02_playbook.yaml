@@ -1,4 +1,31 @@
 ---
+- name: Users creation
+  hosts: all
+  become: yes
+
+  tasks:
+    #creating user
+    - name: Creating user named simone
+      user:
+        name: simone
+        groups: "{{ 'sudo' if ansible_os_family == 'Debian' else 'wheel' }}"
+      tags: always
+    #adding a ssh key to the user simone
+    - name: Adding ssh key for simone
+      authorized_key:
+        user: simone
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC1uT/PIyHLzipmmnvU5jA2Ky4cVt1DnA4YO7fA6zwcl simone authorized key"
+      tags: always
+    #allow user simone to get access with sudo prividge without providing sudo password
+    - name: Sudoers drop-in for simone (NOPASSWD)
+      ansible.builtin.copy:
+        dest: /etc/sudoers.d/simone
+        content: "simone ALL=(ALL) NOPASSWD: ALL\n"
+        owner: root
+        group: root
+        mode: '0440'
+        validate: '/usr/sbin/visudo -cf %s'
+
 - name: Working on workstation(ubuntu-c)
   hosts: workstation
   become: yes
