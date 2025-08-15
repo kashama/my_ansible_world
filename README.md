@@ -116,10 +116,11 @@ when: ansible_distribution == "CentOS"
 
 	  ansible all -m gather_facts | grep ansible_distribution
 
-Creating roles
-ansible role is a concept that allow to organize an ansible playbook
+Ansibles roles:
+An ansible role is a concept that allow to organize tasks of an ansible playbook.
 
 The command:
+	 
 	 ansible-galaxy init playbooks/roles/base
 
 This command oncy run, it will create different roles in base directory
