@@ -1,0 +1,29 @@
+---
+# tasks file for playbooks/roles/centos_servers
+- name: Installing tools into centos servers
+  dnf:
+    name:
+      - httpd
+      - samba
+      - mysql
+    state: present
+  when: ansible_distribution == "Centos"
+  tags: [centos,httpd,samba,mysql]
+- name: Starting httpd(apache) service in CentOS
+  service:
+    name: httpd
+    state: started
+  when: ansible_distribution == "CentOS"
+
+- name: Changing a line in the service(httpd) configuration file
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^ServerAdmin'
+    line: ServerAdmin bijkashama2@gmail.com
+  when: ansible_distribution == "CentOS"
+  register: httpd #il enregistre le changement
+- name: Restarting httpd(apache) service in CentOS
+  service:
+    name: httpd
+    state: restarted
+  when: httpd.changed #il utilise le changement enregistré

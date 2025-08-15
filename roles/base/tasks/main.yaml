@@ -1,0 +1,23 @@
+- name: Updating all servers before any installation
+  hosts: all
+  become: yes
+  tasks:
+    - name: Updating ubuntu servers
+      ansible.builtin.apt:
+        update_cache: yes
+        only_upgrade: yes
+      tags: always
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Updating centos servers
+      package:
+        update_only: yes
+        update_cache: yes
+      tags: always
+      when: ansible_distribution == "Centos"
+
+    - name: Adding ssh key for simone
+      authorized_key:
+        user: simone
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC1uT/PIyHLzipmmnvU5jA2Ky4cVt1DnA4YO7fA6zwcl simone authorized key"
+      tags: always

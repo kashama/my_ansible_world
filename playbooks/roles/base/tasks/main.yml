@@ -1,0 +1,15 @@
+---
+# tasks file for playbooks/roles/base
+- name: Updating ubuntu servers
+  ansible.builtin.apt:
+    update_cache: yes
+    only_upgrade: yes
+  tags: always
+  when: ansible_distribution == "Ubuntu"
+
+- name: Updating centos servers
+  package:
+    update_only: yes
+    update_cache: yes
+  tags: always
+  when: ansible_distribution == "Centos"

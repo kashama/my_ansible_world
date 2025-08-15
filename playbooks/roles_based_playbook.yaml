@@ -1,0 +1,23 @@
+---
+
+- name: Using base role
+  hosts: all
+  become: yes
+  roles:
+    - base
+- name: Using workstation role
+  hosts: workstation
+  become: yes
+  roles:
+    - workstation
+- name: Using ubuntu_servers role
+  hosts: ubuntu_servers
+  become: yes
+  roles:
+    - ubuntu_servers
+- name: Using centos_servers role
+  hosts: centos_servers
+  become: yes
+  roles:
+    - centos_servers
+

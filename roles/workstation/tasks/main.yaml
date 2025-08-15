@@ -1,0 +1,20 @@
+- name: Working on workstation(ubuntu-c)
+  hosts: workstation
+  become: yes
+  tasks:
+    - name: Installing unzip
+      package:
+        name: unzip
+    - name: Installing terraform
+      unarchive:
+        src: https://releases.hashicorp.com/terraform/1.12.2/terraform_1.12.2_linux_amd64.zip
+        dest: /usr/local/bin
+        remote_src: yes
+        mode: 0755
+        owner: root
+        group: root
+    - name: Start apache(web serveur) into ubuntu workstation
+      service:
+        name: apache2
+        state: started
+        enabled: yes

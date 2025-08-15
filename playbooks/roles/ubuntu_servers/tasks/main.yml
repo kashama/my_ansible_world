@@ -1,0 +1,18 @@
+---
+# tasks file for playbooks/roles/ubuntu_servers
+- name: Installing tools into ubuntu servers
+  apt:
+    name:
+      - apache2
+      - nginx
+    state: present
+  when: ansible_distribution == "Ubuntu"
+  tags: [ubuntu,apache,apache,nginx]
+- name: Copying file to the servers(Ubuntu)
+  copy:
+    src: /root/my_ansible_world/assets/default_site.html
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644
+  tags: [ubuntu,apache,apache,nginx]
